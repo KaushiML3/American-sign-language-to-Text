@@ -48,7 +48,7 @@ This project aims to detect and recognize American Sign Language (ASL) gestures 
 
 
 
-## 1. Data set creation [Notebook]()
+## 1. Data set creation [Notebook](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/notebooks/exploratory/Sign_language_data_Extraction-co.ipynb)
 
 ### Data set creation 1: Hand Landmark dataset and Image with Hand Landmark image dataset
 
@@ -104,8 +104,8 @@ This project aims to detect and recognize American Sign Language (ASL) gestures 
     - Save the landmark in the data frame : [Keggle dataset link](https://www.kaggle.com/datasets/grassknoted/)
 
     - Save the copied image with landmark
-        - ![Saved Image sample 1](https://example.com/swagger1.png)
-        - ![Saved Image sample 2](https://example.com/swagger1.png)
+        - ![Saved Image sample 1](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/src_image/13d585a8-cf66-4968-b9c6-089bc21cc24e.rgb_0000.png)
+        - ![Saved Image sample 2](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/src_image/1dd7c980-22a0-4eb2-8148-64e5a4d78a3a.rgb_0000.png)
 
 - **Content :**
 
@@ -115,7 +115,7 @@ This project aims to detect and recognize American Sign Language (ASL) gestures 
     - Document(csv) : ASL gestures with Hand Land mark.
     - Labels: Corresponding labels for each gesture, including alphabets (A-Z) other common ASL gestures or phrases.
 
-## 2. Data manipulation and visualization. [Notebook]()
+## 2. Data manipulation and visualization. [Notebook](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/notebooks/exploratory/ASL_data_exploratory_v1.ipynb)
 
 The dataset used for American Sign Language detection is numerical. Before training the model, the following preprocessing steps were applied:
 
@@ -131,7 +131,7 @@ After preprocessing, two versions of the dataset were saved:
 - IQR Dataset: Processed dataset after outlier removal using the IQR method.
 - ISO Dataset: Processed dataset after outlier removal using the Isolation Forest method.
 
-## Training model [Notebook]()
+## Training model [Notebook](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/notebooks/development/asl_machine_learning_model_training_v1.ipynb)
 
 After preprocessing, the dataset was used to train four machine learning models for American Sign Language detection. The models were trained and evaluated based on key performance metrics.
 
@@ -139,26 +139,19 @@ After preprocessing, the dataset was used to train four machine learning models 
 - Random Forest
     - An ensemble learning method that builds multiple decision trees and combines their outputs for better accuracy.
     - Handles high-dimensional data well and reduces overfitting.
-- Evaluation Matrix
-![image][]
+
 
 - Gradient Boosting (GBM)
     - A boosting technique that builds models sequentially, correcting errors from previous models.
     - Works well with structured numerical datasets.
-- Evaluation Matrix
-![image][]
 
 - CatBoost
     - A high-performance gradient boosting algorithm optimized for categorical features.
     - Reduces the need for extensive preprocessing and improves accuracy.
-- Evaluation Matrix
-![image][]
 
 - XGBoost
     - An optimized gradient boosting framework known for its speed and efficiency.
     - Regularization techniques help prevent overfitting.
-- Evaluation Matrix
-![image][]
 
 ### Training Process:
 Each model was trained on the preprocessed dataset (ISO versions).
