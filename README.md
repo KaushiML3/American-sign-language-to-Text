@@ -59,7 +59,7 @@ This project aims to detect and recognize American Sign Language (ASL) gestures 
     This dataset includes two types of data images and documents. Reference the following dataset to create these images and document. Hand Landmarks were extracted using Google Mediapipe Hand Landmark recognitionmodel.
     - **Refference (Drive or Cloud URL)**: [Google Meadiapipe](https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker)
 
-    - ![Hand Landmark ](https://example.com/swagger1.png)
+    - ![Hand Landmark ](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/src_image/Screenshot%20(40).png)
 
     The MediaPipe Hand Landmarker task lets you detect the landmarks of the hands in an image. You can use this task to locate key points of hands and render visual effects on them. This task operates on image data with a machine learning (ML) model as static data or a continuous stream and outputs hand landmarks in image coordinates, hand landmarks in world coordinates and handedness(left/right hand) of multiple detected hands.
 
@@ -71,11 +71,11 @@ This project aims to detect and recognize American Sign Language (ASL) gestures 
 - **Steps of create this datasets :**
 
     - Detect the hand use (mediapipe/hand_landmarker/detection)
-        - ![Detect hand](https://example.com/swagger1.png)
+        - ![Detect hand](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/src_image/download%20(2).png)
     - Crop the hand area
         - cutoff=30
         - desired_size=(300,300,3)
-        - ![Crop Hand](https://example.com/swagger1.png)
+        - ![Crop Hand](https://github.com/KaushiML3/American-sign-language-to-Text/blob/main/src_image/download%20(3).png)
 
     - Extracted the landmark use mediapipe
     ```python
