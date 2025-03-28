@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream with Prediction</title>
+</head>
+<body>
+    <h1>Video Stream Prediction</h1>
+
+    <!-- Video element to display the local webcam video -->
+    <video id="localVideo" autoplay playsinline></video>
+
+    <!-- Container to show the real-time predictions -->
+    <div id="prediction"></div>
+
+    <!-- Buttons to start, stop, and reset the video stream -->
+    <button id="startButton">Start Video</button>
+    <button id="stopButton" disabled>Stop Video</button>
+    <button id="resetButton" disabled>Reset Predictions</button>
+
+    <script>
+        const videoElement = document.getElementById('localVideo');
+        const ws = new WebSocket('ws://localhost:8000/ws/image_frame');
+        let stream;
+        let captureInterval;
+
+        // Button elements
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const resetButton = document.getElementById('resetButton');
+
+        // Create a canvas to capture frames from the video stream
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        // Function to capture a frame from the video and send it to the server
+        function captureFrame() {
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const arrayBuffer = reader.result;
+                        ws.send(arrayBuffer);  // Send frame as binary data
+                    };
+                    reader.readAsArrayBuffer(blob);
+                }
+            }, 'image/png');
+        }
+
+        // Start the video stream and begin capturing frames
+        startButton.addEventListener('click', async () => {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+            captureInterval = setInterval(captureFrame, 1000);
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            resetButton.disabled = false;  // Enable reset button
+        });
+
+        // Stop the video stream and stop capturing frames
+        stopButton.addEventListener('click', () => {
+            const command = "STOP"; // Replace with your button command
+            const utf8Command = new TextEncoder().encode(command); // Convert to UTF-8 bytes
+            ws.send(utf8Command);
+            clearInterval(captureInterval);
+            stream.getTracks().forEach(track => track.stop());
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            resetButton.disabled = true;
+             // Disable reset button
+        });
+
+        // Reset the predictions on the server side
+        resetButton.addEventListener('click', () => {
+            const command = "RESET"; // Replace with your button command
+            const utf8Command = new TextEncoder().encode(command); // Convert to UTF-8 bytes
+            ws.send(utf8Command);  // Send reset command to server
+        });
+
+        // Display prediction returned from the server
+        ws.onmessage = (message) => {
+            document.getElementById('prediction').innerText = message.data;
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket closed');
+        };
+
+        ws.onerror = (error) => {
+            console.log('WebSocket error:', error);
+        };
+    </script>
+</body>
+</html>

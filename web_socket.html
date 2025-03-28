@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Predictions</title>
+</head>
+<body>
+    <h1>Real-Time Predictions</h1>
+    <div id="predictions"></div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8000/ws/predict_video");
+
+        socket.onmessage = function(event) {
+            const predictionsDiv = document.getElementById('predictions');
+            const newPrediction = document.createElement('div');
+            newPrediction.textContent = event.data;
+            predictionsDiv.appendChild(newPrediction);
+        };
+
+        socket.onclose = function(event) {
+            console.log("WebSocket closed: " + event.reason);
+        };
+
+        socket.onerror = function(error) {
+            console.log("WebSocket error: " + error.message);
+        };
+    </script>
+</body>
+</html>

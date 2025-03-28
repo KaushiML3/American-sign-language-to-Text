@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream with Prediction</title>
+</head>
+<body>
+    <h1>Video Stream Prediction</h1>
+
+    <!-- Video element to display the local webcam video -->
+    <video id="localVideo" autoplay playsinline></video>
+
+    <!-- Container to show the real-time predictions -->
+    <div id="prediction"></div>
+
+    <!-- Buttons to start and stop the video stream -->
+    <button id="startButton">Start Video</button>
+    <button id="stopButton" disabled>Stop Video</button>
+
+    <script>
+        const videoElement = document.getElementById('localVideo');
+        const ws = new WebSocket('ws://localhost:8000/ws/image_frame2');
+        let stream;
+        let captureInterval;
+
+        // Button elements
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+
+        // Create a canvas to capture frames from the video stream
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        // Function to capture a frame from the video and send it to the server
+        function captureFrame() {
+            // Set canvas size to video size
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+
+            // Draw the video frame onto the canvas
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+            // Convert the canvas to a Blob (in PNG format) and send to the server
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const arrayBuffer = reader.result;
+                        ws.send(arrayBuffer);  // Send frame as binary data
+                    };
+                    reader.readAsArrayBuffer(blob);
+                }
+            }, 'image/png');
+        }
+
+        // Start the video stream and begin capturing frames
+        startButton.addEventListener('click', async () => {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+
+            // Start capturing frames every 100ms
+            captureInterval = setInterval(captureFrame,1000);
+
+            // Disable the start button and enable the stop button
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        });
+
+        // Stop the video stream and stop capturing frames
+        stopButton.addEventListener('click', () => {
+            clearInterval(captureInterval);  // Stop capturing frames
+
+            // Stop the video stream
+            stream.getTracks().forEach(track => track.stop());
+
+            // Disable the stop button and enable the start button
+            stopButton.disabled = true;
+            startButton.disabled = false;
+        });
+
+        // Display prediction returned from the server
+        ws.onmessage = (message) => {
+            document.getElementById('prediction').innerText = message.data;
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket closed');
+        };
+
+        ws.onerror = (error) => {
+            console.log('WebSocket error:', error);
+        };
+    </script>
+</body>
+</html>
