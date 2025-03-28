@@ -1,6 +1,6 @@
 # ASL Detection
 
-This project aims to detect and recognize American Sign Language (ASL) gestures from live video streams or pre-recorded videos. Using computer vision and deep learning techniques, the system is capable of identifying ASL signs and converting them into corresponding English letters or words in real-time. This project can be used to bridge the communication gap between the deaf and hard-of-hearing community and those unfamiliar with sign language.
+This project aims to detect and recognize American Sign Language (ASL) gestures from live video streams . Using computer vision and deep learning techniques, the system is capable of identifying ASL signs and converting them into corresponding English letters or words in real-time. This project can be used to bridge the communication gap between the deaf and hard-of-hearing community and those unfamiliar with sign language.
 
 
 # Features
